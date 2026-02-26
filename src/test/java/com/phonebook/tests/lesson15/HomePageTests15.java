@@ -3,7 +3,7 @@ package com.phonebook.tests.lesson15;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class HomePageTests extends TestBase{
+public class HomePageTests15 extends TestBase15 {
     // Тесты главной страницы. Наследуем BaseTest (там открытие сайта и driver).
 
     @Test

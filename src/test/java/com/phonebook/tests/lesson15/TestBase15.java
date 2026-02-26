@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeMethod;
 
 import java.time.Duration;
 
-public class TestBase {
+public class TestBase15 {
     protected WebDriver driver;
 
     @BeforeMethod
