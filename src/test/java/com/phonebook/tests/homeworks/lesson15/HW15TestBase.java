@@ -20,7 +20,7 @@ import org.testng.annotations.BeforeMethod;
 
 import java.time.Duration;
 
-public class TestBaseHW {
+public class HW15TestBase {
 
     protected WebDriver driver;
 

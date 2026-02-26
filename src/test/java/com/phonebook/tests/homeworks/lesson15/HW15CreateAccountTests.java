@@ -15,7 +15,7 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CreateAccountTestsHW extends TestBaseHW {
+public class HW15CreateAccountTests extends HW15TestBase {
 
     @Test
     public void newUserRegisterPositiveTest() {
