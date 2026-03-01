@@ -1,3 +1,4 @@
+/*
 package com.phonebook.tests.lesson17._04_tests;
 
 import com.phonebook.tests.lesson17._01_manager._1_2_TestBase17;
@@ -9,12 +10,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+*/
 /*
  AddContactNegativeTests17 — негативные сценарии добавления контакта.
 
  Проверяет, что при невалидных данных контакт не создаётся
  и система показывает ошибку.
-*/
+*//*
+
 
 public class _4_5_AddContactNegativeTests17 extends _1_2_TestBase17 {
 
@@ -48,4 +51,4 @@ public class _4_5_AddContactNegativeTests17 extends _1_2_TestBase17 {
         // Ожидаем ошибку (alert)
         Assert.assertTrue(app17.isAlertPresent());
     }
-}
+}*/

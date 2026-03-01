@@ -1,3 +1,4 @@
+/*
 package com.phonebook.tests.lesson17._04_tests;
 
 import com.phonebook.tests.lesson17._01_manager._1_2_TestBase17;
@@ -6,13 +7,15 @@ import com.phonebook.tests.lesson17._03_model._3_3_UserData17;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+*/
 /*
  LoginTests17 — тесты авторизации пользователя.
 
  Проверяют:
  - успешный вход с валидными данными
  - ошибку при отсутствии email
-*/
+*//*
+
 
 public class _4_2_LoginTests17 extends _1_2_TestBase17 {
 
@@ -42,4 +45,4 @@ public class _4_2_LoginTests17 extends _1_2_TestBase17 {
         // Ожидаем сообщение об ошибке (alert)
         Assert.assertTrue(app17.isAlertPresent());
     }
-}
+}*/

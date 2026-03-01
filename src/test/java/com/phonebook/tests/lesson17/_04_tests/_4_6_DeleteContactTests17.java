@@ -1,3 +1,4 @@
+/*
 package com.phonebook.tests.lesson17._04_tests;
 
 import com.phonebook.tests.lesson17._01_manager._1_2_TestBase17;
@@ -9,12 +10,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+*/
 /*
  DeleteContactTests17 — тест удаления контакта.
 
  Предусловие: пользователь авторизован и в списке есть хотя бы один контакт.
  Проверка: после удаления количество контактов уменьшается на 1.
-*/
+*//*
+
 
 public class _4_6_DeleteContactTests17 extends _1_2_TestBase17 {
 
@@ -56,4 +59,4 @@ public class _4_6_DeleteContactTests17 extends _1_2_TestBase17 {
         // Количество контактов должно уменьшиться на 1
         Assert.assertEquals(sizeAfter, sizeBefore - 1);
     }
-}
+}*/

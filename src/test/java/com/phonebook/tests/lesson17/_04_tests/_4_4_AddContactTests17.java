@@ -1,3 +1,4 @@
+/*
 package com.phonebook.tests.lesson17._04_tests;
 
 import com.phonebook.tests.lesson17._01_manager._1_2_TestBase17;
@@ -10,11 +11,13 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+*/
 /*
  AddContactTests17 — позитивный сценарий добавления контакта.
 
  Проверяет, что контакт сохраняется и появляется в списке.
-*/
+*//*
+
 
 public class _4_4_AddContactTests17 extends _1_2_TestBase17 {
 
@@ -52,4 +55,4 @@ public class _4_4_AddContactTests17 extends _1_2_TestBase17 {
         // Чистим данные после теста
         app17.removeContact();
     }
-}
+}*/

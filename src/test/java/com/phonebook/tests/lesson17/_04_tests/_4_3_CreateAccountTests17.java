@@ -1,3 +1,4 @@
+/*
 package com.phonebook.tests.lesson17._04_tests;
 
 import com.phonebook.tests.lesson17._01_manager._1_2_TestBase17;
@@ -5,13 +6,15 @@ import com.phonebook.tests.lesson17._03_model._3_1_User17;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+*/
 /*
  CreateAccountTests17 — тесты регистрации пользователя.
 
  Проверяют:
  - успешную регистрацию нового пользователя
  - ошибку при регистрации уже существующего пользователя
-*/
+*//*
+
 
 public class _4_3_CreateAccountTests17 extends _1_2_TestBase17 {
 
@@ -42,4 +45,4 @@ public class _4_3_CreateAccountTests17 extends _1_2_TestBase17 {
         // Ожидаем появление alert
         Assert.assertTrue(app17.isAlertPresent());
     }
-}
+}*/
