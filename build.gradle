@@ -17,21 +17,69 @@ java {
 
 dependencies {
     // main (helpers / app manager)
-    implementation("org.seleniumhq.selenium:selenium-java:4.40.0")
-    implementation("io.github.bonigarcia:webdrivermanager:6.3.3")
+    implementation 'org.seleniumhq.selenium:selenium-java:4.40.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
 
-    // tests
-    testImplementation("org.testng:testng:7.12.0")
+    // TestNG нужен только для тестов (чтобы IDEA/Gradle не тянули его в main)
+    testImplementation 'org.testng:testng:7.12.0'
+
+    // Логирование в тестах (убирает WARN/пустые логи)
+    testImplementation 'org.slf4j:slf4j-simple:2.0.17'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+/*
+ test task (стандартный Gradle `test`)
+ - useTestNG() включает TestNG runner
+ - testLogging печатает passed/skipped/failed
+ - -Pbrowser=chrome прокидываем в System property "browser"
+*/
 test {
     useTestNG()
+
     testLogging {
-        events "passed", "skipped", "failed"
-        exceptionFormat "full"
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+    }
+
+    if (project.hasProperty('browser')) {
+        systemProperty 'browser', browser
     }
 }
+
+/*
+ Универсальный регистратор task-ов по suite-файлам.
+ Добавь новую строку registerSuite(...) — и получишь новый gradlew task.
+*/
+def registerSuite(String taskName, String suitePath) {
+    tasks.register(taskName, Test) {
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath        = sourceSets.test.runtimeClasspath
+
+        useTestNG() {
+            suites suitePath
+        }
+
+        testLogging {
+            events 'passed', 'skipped', 'failed'
+            exceptionFormat 'full'
+        }
+
+        if (project.hasProperty('browser')) {
+            systemProperty 'browser', browser
+        }
+    }
+}
+
+// ─── Phonebook (основной проект) ───────────────────────────────────────────
+// gradlew regression
+// gradlew regression -Pbrowser=firefox
+registerSuite('regression', 'src/test/resources/regression.xml')
+
+// ─── Homework lesson19 (demowebshop) ───────────────────────────────────────
+// gradlew hw19
+// gradlew hw19 -Pbrowser=firefox
+registerSuite('hw19', 'src/test/resources/hw19.xml')

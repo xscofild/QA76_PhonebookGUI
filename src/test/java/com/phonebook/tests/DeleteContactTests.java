@@ -1,27 +1,24 @@
-package com.phonebook.tests.vom;
+package com.phonebook.tests;
 
-import com.phonebook.tests.core.TestBase;
+import com.phonebook.core.TestBase;
 import com.phonebook.models.User;
 import com.phonebook.models.Contact;
 import com.phonebook.data.UserData;
 import com.phonebook.data.ContactData;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /*
- AddContactTests — позитивный сценарий добавления контакта.
+ DeleteContactTests — тест удаления контакта.
 
- Проверяет, что контакт сохраняется и появляется в списке.
+ Предусловие: пользователь авторизован, контакт создан.
+ Проверка: после удаления количество контактов уменьшается на 1.
 */
-
-public class AddContactTests extends TestBase {
+public class DeleteContactTests extends TestBase {
 
     @BeforeMethod
     public void precondition() {
-        // Авторизация перед тестом
-
         if (!app.getUser().isLoginLinkPresent()) {
             app.getUser().clickOnSignOutButton();
         }
@@ -31,12 +28,8 @@ public class AddContactTests extends TestBase {
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
         app.getUser().clickOnLoginButton();
-    }
 
-    @Test
-    public void addContactPositiveTest() {
-
-        // Добавление контакта с валидными данными
+        // Создаём контакт, чтобы было что удалять.
         app.getContact().clickOnAddLink();
         app.getContact().fillContactForm(new Contact()
                 .setName(ContactData.name)
@@ -45,17 +38,20 @@ public class AddContactTests extends TestBase {
                 .setEmail(ContactData.email)
                 .setAddress(ContactData.address)
                 .setDescription(ContactData.description));
-
         app.getContact().clickOnSaveButton();
-
-        // Проверяем появление контакта в списке (по имени)
-        Assert.assertTrue(app.getContact().isContactCreatedByText(ContactData.name));
     }
 
-    @AfterMethod
-    public void postCondition() {
-        // Чистим данные после теста
+    @Test
+    public void deleteContactTest() {
+        int sizeBefore = app.getContact().sizeOfContacts();
+
         app.getContact().removeContact();
+
+        // Пауза нужна: UI асинхронно обновляет список после удаления.
+        app.getContact().pause(400);
+
+        int sizeAfter = app.getContact().sizeOfContacts();
+
+        Assert.assertEquals(sizeAfter, sizeBefore - 1);
     }
 }
-

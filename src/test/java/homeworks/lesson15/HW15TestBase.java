@@ -1,4 +1,4 @@
-package com.phonebook.tests.homeworks.lesson15;
+package homeworks.lesson15;
 
 /*
 Homework – Automation (Lesson 15)

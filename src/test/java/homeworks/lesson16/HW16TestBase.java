@@ -1,4 +1,4 @@
-package com.phonebook.tests.homeworks.lesson16;
+package homeworks.lesson16;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;

@@ -1,31 +1,29 @@
-package com.phonebook.tests.vom;
+package com.phonebook.tests;
 
-import com.phonebook.tests.core.TestBase;
+import com.phonebook.core.TestBase;
 import com.phonebook.models.User;
 import com.phonebook.models.Contact;
 import com.phonebook.data.UserData;
 import com.phonebook.data.ContactData;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /*
- AddContactNegativeTests — негативные сценарии добавления контакта.
+ AddContactTests — позитивный сценарий добавления контакта.
 
- Проверяет, что при невалидных данных контакт не создаётся
- и система показывает ошибку.
+ Проверяет, что контакт сохраняется и появляется в списке.
+ После теста контакт удаляется — не загрязняем данные.
 */
+public class AddContactTests extends TestBase {
 
-public class AddContactNegativeTests extends TestBase {
-
+    // Гарантируем чистое состояние: пользователь авторизован перед тестом.
     @BeforeMethod
     public void precondition() {
-        // Авторизация перед тестом
-
         if (!app.getUser().isLoginLinkPresent()) {
             app.getUser().clickOnSignOutButton();
         }
-
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
                 .setEmail(UserData.email)
@@ -34,24 +32,22 @@ public class AddContactNegativeTests extends TestBase {
     }
 
     @Test
-    public void addContactWithInvalidPhoneNumber() {
-
-        // Переход на страницу добавления
+    public void addContactPositiveTest() {
         app.getContact().clickOnAddLink();
-
-        // Заполнение формы с невалидным номером телефона
         app.getContact().fillContactForm(new Contact()
                 .setName(ContactData.name)
                 .setSurname(ContactData.lastName)
-                .setPhoneNumber("1-99-666-4444")
+                .setPhoneNumber(ContactData.phone)
                 .setEmail(ContactData.email)
                 .setAddress(ContactData.address)
                 .setDescription(ContactData.description));
-
         app.getContact().clickOnSaveButton();
 
-        // Ожидаем ошибку (alert)
-        Assert.assertTrue(app.getContact().isAlertPresent());
+        Assert.assertTrue(app.getContact().isContactCreatedByText(ContactData.name));
+    }
+
+    @AfterMethod
+    public void postCondition() {
+        app.getContact().removeContact();
     }
 }
-

@@ -1,4 +1,4 @@
-package com.phonebook.tests.homeworks.lesson17;
+package homeworks.lesson17;
 
 /*
 Homework – Lesson 17

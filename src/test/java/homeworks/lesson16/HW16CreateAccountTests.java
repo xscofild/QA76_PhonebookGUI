@@ -1,4 +1,4 @@
-package com.phonebook.tests.homeworks.lesson16;
+package homeworks.lesson16;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;

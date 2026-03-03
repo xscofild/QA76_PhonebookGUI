@@ -3,6 +3,8 @@ package com.phonebook.core;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
 import com.phonebook.fw.ContactHelper;
 import com.phonebook.fw.HomePageHelper;
 import com.phonebook.fw.UserHelper;
@@ -10,55 +12,52 @@ import com.phonebook.fw.UserHelper;
 import java.time.Duration;
 
 /*
- ApplicationManager
- Центральная точка управления приложением.
+ ApplicationManager — точка входа в фреймворк.
 
- Ответственность:
- - инициализация WebDriver
- - создание helper-объектов
- - корректное завершение сессии
+ Создаёт WebDriver, инициализирует helper-слой,
+ завершает сессию. Тестовой логики не содержит.
 
- Не содержит:
- - тестовой логики
- - локаторов
- - UI-действий
+ Браузер передаётся через Gradle:
+   gradlew regression -Pbrowser=firefox
+ По умолчанию — chrome (см. TestBase).
 */
-
 public class ApplicationManager {
 
-    // Общий драйвер для всего фреймворка
+    private final String browser;
     protected WebDriver driver;
 
-    // Helper-слой (работа со страницами)
     private UserHelper user;
     private ContactHelper contact;
     private HomePageHelper homePage;
 
-    public void init() {
-
-        // Автоматически скачивает и подключает нужную версию chromedriver
-        WebDriverManager.chromedriver().setup();
-
-        // Создание экземпляра браузера
-        driver = new ChromeDriver();
-
-        // Базовый URL приложения
-        driver.get("https://telranedu.web.app");
-
-        // Работаем всегда в maximized режиме — меньше проблем с адаптивной версткой
-        driver.manage().window().maximize();
-
-        // Базовое ожидание для поиска элементов
-        // Использовать аккуратно — при росте проекта лучше перейти на explicit waits
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-        // Инициализация слоя взаимодействия (Page/Helper abstraction)
-        user = new UserHelper(driver);
-        contact = new ContactHelper(driver);
-        homePage = new HomePageHelper(driver);
+    public ApplicationManager(String browser) {
+        this.browser = browser;
     }
 
-    // Геттеры — точка доступа тестов к helper-слою
+    public void init() {
+        if (browser.equalsIgnoreCase("chrome")) {
+            WebDriverManager.chromedriver().setup();
+            driver = new ChromeDriver();
+
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            WebDriverManager.firefoxdriver().setup();
+            driver = new FirefoxDriver();
+
+        } else {
+            throw new IllegalArgumentException("Unknown browser: " + browser);
+        }
+
+        driver.get("https://telranedu.web.app");
+        driver.manage().window().maximize();
+
+        // implicitlyWait — минимальное глобальное ожидание.
+        // Для динамических элементов используй явные ожидания в helpers.
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+        user     = new UserHelper(driver);
+        contact  = new ContactHelper(driver);
+        homePage = new HomePageHelper(driver);
+    }
 
     public UserHelper getUser() {
         return user;
@@ -73,7 +72,6 @@ public class ApplicationManager {
     }
 
     public void stop() {
-        // Полное завершение сессии WebDriver
         driver.quit();
     }
 }

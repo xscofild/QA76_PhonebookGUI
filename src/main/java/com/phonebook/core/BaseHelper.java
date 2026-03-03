@@ -11,35 +11,26 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 /*
- BaseHelper
- Базовый слой взаимодействия с UI.
+ BaseHelper — базовый слой UI-взаимодействий.
 
- Предоставляет общие методы:
- - click
- - type
- - проверки элементов
- - работа с alert
-
- Не управляет браузером.
- WebDriver передаётся через ApplicationManager.
+ Все helpers наследуют этот класс и получают
+ готовые методы click/type/проверок.
+ Логики конкретных страниц не содержит.
 */
-
 public class BaseHelper {
 
-    // Общий драйвер для всех UI-действий
     protected WebDriver driver;
 
     public BaseHelper(WebDriver driver) {
         this.driver = driver;
     }
 
-    // Проверка существования элемента без падения теста
     public boolean isElementPresent(By locator) {
         return !driver.findElements(locator).isEmpty();
     }
 
-    // Безопасный ввод: клик → очистка → ввод
-    // Если text == null, ничего не делаем (защита от случайных null)
+    // Клик перед вводом нужен для фокуса на элементе.
+    // Пропускаем если text == null — защита от необязательных полей.
     public void type(By locator, String text) {
         if (text != null) {
             click(locator);
@@ -49,27 +40,24 @@ public class BaseHelper {
         }
     }
 
-    // Базовый клик
     public void click(By locator) {
         driver.findElement(locator).click();
     }
 
-    // Проверка появления alert с ожиданием
-    // Не выбрасывает исключение, если alert не появился
+    // Принимает alert если он появился, возвращает false если нет.
+    // Используется там, где alert появляется не всегда.
     public boolean isAlertPresent() {
         try {
             Alert alert = new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions.alertIsPresent());
-
             alert.accept();
             return true;
-
         } catch (TimeoutException e) {
             return false;
         }
     }
 
-    // Жёсткая пауза (анти-паттерн, использовать только если нет альтернативы)
+    // Анти-паттерн. Использовать только если нет явного условия для ожидания.
     public void pause(int millis) {
         try {
             Thread.sleep(millis);

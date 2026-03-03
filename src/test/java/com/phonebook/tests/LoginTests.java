@@ -1,6 +1,6 @@
-package com.phonebook.tests.vom;
+package com.phonebook.tests;
 
-import com.phonebook.tests.core.TestBase;
+import com.phonebook.core.TestBase;
 import com.phonebook.models.User;
 import com.phonebook.data.UserData;
 import org.testng.Assert;
@@ -10,17 +10,14 @@ import org.testng.annotations.Test;
 /*
  LoginTests — тесты авторизации пользователя.
 
- Проверяют:
- - успешный вход с валидными данными
- - ошибку при отсутствии email
+ Позитивный: успешный вход с валидными данными.
+ Негативный: попытка входа без email.
 */
-
 public class LoginTests extends TestBase {
 
+    // Гарантируем чистое состояние: если залогинен — выходим.
     @BeforeMethod
     public void ensurePrecondition() {
-
-        // Если пользователь уже авторизован, то выходим из аккаунта
         if (!app.getUser().isLoginLinkPresent()) {
             app.getUser().clickOnSignOutButton();
         }
@@ -28,30 +25,23 @@ public class LoginTests extends TestBase {
 
     @Test
     public void loginPositiveTest() {
-
-        // Авторизация с корректными данными
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
         app.getUser().clickOnLoginButton();
 
-        // После успешного входа должна появиться кнопка Sign Out
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
     @Test
     public void loginNegativeWithoutEmailTest() {
-
-        // Попытка входа без указания email
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
-                .setEmail("")
+                .setEmail("")   // пустой email — невалидный сценарий
                 .setPassword(UserData.password));
         app.getUser().clickOnLoginButton();
 
-        // Ожидаем сообщение об ошибке (alert)
         Assert.assertTrue(app.getUser().isAlertPresent());
     }
 }
-

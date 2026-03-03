@@ -9,22 +9,25 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 /*
- ContactHelper
- Логика работы с контактами:
- создание, проверка, удаление.
- Используется через ApplicationManager.
-*/
+ ContactHelper — действия с контактами.
 
+ Создание, проверка наличия, удаление.
+ Локаторы инкапсулированы здесь — тесты не знают о By/xpath/css.
+*/
 public class ContactHelper extends BaseHelper {
+
+    // CSS-класс карточки контакта. Если верстка изменится — правим только здесь.
+    private final By contactCards = By.cssSelector(".contact-item_card__2SOIM");
 
     public ContactHelper(WebDriver driver) {
         super(driver);
     }
 
-    // Проверка наличия контакта по тексту (например, имя)
+    // Ищет совпадение по тексту среди всех h2 на странице.
+    // Используется для проверки что контакт появился после создания.
     public boolean isContactCreatedByText(String text) {
-        List<WebElement> contactsName = driver.findElements(By.cssSelector("h2"));
-        for (WebElement element : contactsName) {
+        List<WebElement> names = driver.findElements(By.cssSelector("h2"));
+        for (WebElement element : names) {
             if (element.getText().equals(text)) {
                 return true;
             }
@@ -32,21 +35,19 @@ public class ContactHelper extends BaseHelper {
         return false;
     }
 
-    // Количество карточек контактов
+    // Возвращает 0 если карточек нет — не бросает исключение.
     public int sizeOfContacts() {
-        By cards = By.cssSelector(".contact-item_card__2SOIM");
-        if (isElementPresent(cards)) {
-            return driver.findElements(cards).size();
+        if (isElementPresent(contactCards)) {
+            return driver.findElements(contactCards).size();
         }
         return 0;
     }
 
-    // Нажатие Save на форме добавления
-    public void clickOnSaveButton() {
-        click(By.cssSelector(".add_form__2rsm2 button"));
+    public void clickOnAddLink() {
+        click(By.cssSelector("[href='/add']"));
     }
 
-    // Заполнение формы данными из модели Contact
+    // Порядок полей соответствует порядку input-ов на форме добавления.
     public void fillContactForm(Contact contact) {
         type(By.xpath("//input[1]"), contact.getName());
         type(By.xpath("//input[2]"), contact.getSurname());
@@ -56,14 +57,14 @@ public class ContactHelper extends BaseHelper {
         type(By.xpath("//input[6]"), contact.getDescription());
     }
 
-    // Переход на страницу добавления контакта
-    public void clickOnAddLink() {
-        click(By.cssSelector("[href='/add']"));
+    public void clickOnSaveButton() {
+        click(By.cssSelector(".add_form__2rsm2 button"));
     }
 
-    // Удаление первого контакта
+    // Кликает первую карточку и удаляет контакт.
+    // Используется для очистки данных после теста.
     public void removeContact() {
-        click(By.cssSelector(".contact-item_card__2SOIM"));
+        click(contactCards);
         click(By.xpath("//button[.='Remove']"));
     }
 }

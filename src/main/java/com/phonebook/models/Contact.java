@@ -1,15 +1,18 @@
 package com.phonebook.models;
 
 /*
- Contact
- Модель данных контакта (Value Object).
- Используется для передачи данных в форму.
- Логики не содержит.
-*/
+ Contact — Value Object для данных контакта.
 
+ Передаётся в ContactHelper.fillContactForm().
+ Использует fluent-style setters для удобного создания в тестах:
+
+   Contact contact = new Contact()
+       .setName("John")
+       .setSurname("Wick")
+       ...
+*/
 public class Contact {
 
-    // Поля модели должны быть private
     private String name;
     private String surname;
     private String phoneNumber;
@@ -17,7 +20,6 @@ public class Contact {
     private String address;
     private String description;
 
-    // Fluent setters (builder-style)
     public Contact setName(String name) {
         this.name = name;
         return this;
@@ -48,29 +50,10 @@ public class Contact {
         return this;
     }
 
-    // Getters
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getDescription() {
-        return description;
-    }
+    public String getName()        { return name; }
+    public String getSurname()     { return surname; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getEmail()       { return email; }
+    public String getAddress()     { return address; }
+    public String getDescription() { return description; }
 }
