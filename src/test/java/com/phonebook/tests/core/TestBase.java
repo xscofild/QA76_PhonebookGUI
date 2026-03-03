@@ -1,10 +1,13 @@
-package com.phonebook.tests.lesson17._01_manager;
+package com.phonebook.tests.core;
 
+import com.phonebook.core.ApplicationManager;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 
 /*
- TestBase17 — базовый класс для всех тестов.
+ TestBase — базовый класс для всех тестов.
 
  Отвечает за:
  - запуск браузера перед каждым тестом
@@ -13,26 +16,27 @@ import org.testng.annotations.BeforeMethod;
  Все тесты наследуются от этого класса.
 */
 
-public class _1_2_TestBase17 {
+public class TestBase {
 
     // Общий ApplicationManager для тестов.
     // Через него управляется WebDriver.
-    protected static _1_1_ApplicationManager17 app17 = new _1_1_ApplicationManager17();
+    protected static ApplicationManager app = new ApplicationManager();
 
-    @BeforeMethod
+    //@BeforeMethod
+    @BeforeSuite            // Выполняется один раз перед всеми тестами в классе.
     public void setUp() {
 
         // Выполняется перед каждым тестом.
         // Запускает браузер и открывает приложение.
-        app17.init();
+        app.init();
     }
 
-    @AfterMethod(enabled = false)
+    @AfterSuite(enabled = false)   // Выполняется один раз после всех тестов в классе.
     public void tearDown() {
 
         // Выполняется после каждого теста.
         // Сейчас отключено (enabled = false).
         // В рабочей версии должно быть включено, чтобы браузер закрывался.
-        app17.stop();
+        app.stop();
     }
 }
