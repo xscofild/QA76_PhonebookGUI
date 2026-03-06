@@ -1,26 +1,14 @@
 package com.phonebook.tests;
 
-import com.phonebook.core.TestBase;
-import com.phonebook.models.User;
 import com.phonebook.data.UserData;
+import com.phonebook.models.User;
+import com.phonebook.tests.core.TestBase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/*
- CreateAccountTests — тесты регистрации нового пользователя.
-
- Позитивный тест: enabled=false — отключён, потому что аккаунт уже существует.
-   Чтобы запустить — нужно вручную подставить уникальный email.
-
- Негативный тест: попытка зарегистрировать уже существующий email.
-   Ожидаем: система показывает alert с ошибкой.
-
- Запускается через: gradlew negative (negative.xml)
-*/
 public class CreateAccountTests extends TestBase {
 
-    // Перед тестом: если залогинен — выходим, чтобы форма регистрации была доступна.
     @BeforeMethod
     public void ensurePrecondition() {
         if (!app.getUser().isLoginLinkPresent()) {
@@ -28,9 +16,8 @@ public class CreateAccountTests extends TestBase {
         }
     }
 
-    // enabled = false — тест пропускается при запуске suite.
-    // Причина: UserData.email уже зарегистрирован. Повторная регистрация вернёт ошибку 409.
-    // Для запуска: замени UserData.email на новый уникальный адрес.
+    // enabled = false — UserData.email уже существует, тест упадёт с кодом 409.
+    // Для запуска: подставить уникальный email.
     @Test(enabled = false)
     public void newUserRegisterPositiveTest() {
         app.getUser().clickOnLoginLink();
@@ -38,12 +25,10 @@ public class CreateAccountTests extends TestBase {
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
         app.getUser().clickOnRegistrationButton();
-
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
-    // Негативный: регистрация с уже существующим email → alert от сервера.
-    // isAlertPresent() принимает alert и возвращает true.
+    // Регистрация с уже существующим email → alert (код 409).
     @Test
     public void existedUserRegisterNegativeTest() {
         app.getUser().clickOnLoginLink();
@@ -51,7 +36,6 @@ public class CreateAccountTests extends TestBase {
                 .setEmail(UserData.email)
                 .setPassword(UserData.password));
         app.getUser().clickOnRegistrationButton();
-
         Assert.assertTrue(app.getUser().isAlertPresent());
     }
 }

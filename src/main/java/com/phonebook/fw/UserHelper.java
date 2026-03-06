@@ -5,15 +5,8 @@ import com.phonebook.models.User;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-/*
- UserHelper — все действия пользователя в браузере: логин, регистрация, выход.
-
- Принцип: тесты не знают ни одного локатора (By, xpath, css).
- Всё взаимодействие с DOM — только здесь.
-
- Одна форма используется и для логина, и для регистрации.
- Разница — какую кнопку нажать: Login или Registration.
-*/
+// Все действия пользователя: логин, регистрация, выход.
+// Одна форма для логина и регистрации — разная кнопка.
 public class UserHelper extends BaseHelper {
 
     public UserHelper(WebDriver driver) {
@@ -24,8 +17,6 @@ public class UserHelper extends BaseHelper {
         click(By.cssSelector("[href='/login']"));
     }
 
-    // Заполняет форму email + password.
-    // Используется как перед loginButton, так и перед registrationButton.
     public void fillLoginRegisterForm(User user) {
         type(By.name("email"), user.getEmail());
         type(By.name("password"), user.getPassword());
@@ -43,18 +34,17 @@ public class UserHelper extends BaseHelper {
         click(By.xpath("//button[.='Sign Out']"));
     }
 
-    // true → пользователь авторизован (кнопка Sign Out видна).
+    // true → залогинен
     public boolean isSignOutButtonPresent() {
         return isElementPresent(By.xpath("//button[.='Sign Out']"));
     }
 
-    // true → пользователь НЕ авторизован (ссылка Login видна в навигации).
+    // true → не залогинен
     public boolean isLoginLinkPresent() {
         return isElementPresent(By.cssSelector("[href='/login']"));
     }
 
-    // Сообщение об ошибке под формой, например: "Login failed with code 401".
-    // Появляется при неверном пароле или попытке зарегистрировать существующий email.
+    // Ошибка под формой: "Login failed with code 401" или "Registration failed with code 409"
     public boolean isErrorMessagePresent() {
         return isElementPresent(By.cssSelector(".login_login__3EHKB > div"));
     }

@@ -1,35 +1,27 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<!--
-  negative.xml — набор негативных тестов.
-
-  Запуск: gradlew negative
-
-  <include name=".*Negative.*"> — по regexp включает только методы с "Negative" в имени.
-  LoginTests содержит оба типа тестов — здесь берём только негативные.
-
-  CreateAccountTests и AddContactNegativeTests содержат только негативные тесты —
-  поэтому включаем классы целиком без фильтра по методам.
--->
+<!-- Негативные тесты -->
 <suite name="Negative" verbose="1">
-
     <test name="Negative Tests">
         <classes>
 
+            <!-- В LoginTests берём только методы с Negative -->
             <class name="com.phonebook.tests.LoginTests">
                 <methods>
-                    <!-- Берём только методы с "Negative" в имени -->
                     <include name=".*Negative.*"/>
                 </methods>
             </class>
 
-            <!-- Весь класс — только негативные тесты регистрации -->
-            <class name="com.phonebook.tests.CreateAccountTests"/>
+            <!-- В CreateAccountTests берём только негативные методы -->
+            <class name="com.phonebook.tests.CreateAccountTests">
+                <methods>
+                    <include name=".*Negative.*"/>
+                </methods>
+            </class>
 
-            <!-- Весь класс — только негативные тесты добавления контакта -->
+            <!-- Отдельный класс только с негативным сценарием -->
             <class name="com.phonebook.tests.AddContactNegativeTests"/>
 
         </classes>
     </test>
-
 </suite>

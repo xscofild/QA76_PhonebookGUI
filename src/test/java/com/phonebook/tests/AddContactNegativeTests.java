@@ -1,22 +1,16 @@
 package com.phonebook.tests;
 
-import com.phonebook.core.TestBase;
-import com.phonebook.models.User;
-import com.phonebook.models.Contact;
-import com.phonebook.data.UserData;
 import com.phonebook.data.ContactData;
+import com.phonebook.data.UserData;
+import com.phonebook.models.Contact;
+import com.phonebook.models.User;
+import com.phonebook.tests.core.TestBase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/*
- AddContactNegativeTests — негативные тесты добавления контакта.
-
- Проверяет что система корректно отклоняет невалидные данные.
- При невалидных данных: контакт не создаётся, появляется alert.
-
- Запускается через: gradlew negative (negative.xml)
-*/
+// Негативные тесты добавления контакта.
+// При невалидных данных: контакт не создаётся, появляется alert.
 public class AddContactNegativeTests extends TestBase {
 
     @BeforeMethod
@@ -31,21 +25,18 @@ public class AddContactNegativeTests extends TestBase {
         app.getUser().clickOnLoginButton();
     }
 
-    // Проверяет валидацию формата номера телефона.
-    // "1-99-666-4444" — содержит дефисы, которые сервер не принимает.
-    // Ожидаем: система показывает alert, контакт не сохраняется.
+    // "1-99-666-4444" — дефисы не разрешены, сервер вернёт ошибку.
     @Test
-    public void addContactWithInvalidPhoneNumber() {
+    public void addContactWithInvalidPhoneTest() {
         app.getContact().clickOnAddLink();
         app.getContact().fillContactForm(new Contact()
                 .setName(ContactData.name)
                 .setSurname(ContactData.lastName)
-                .setPhoneNumber("1-99-666-4444") // невалидный формат — дефисы не разрешены
+                .setPhoneNumber("1-99-666-4444")
                 .setEmail(ContactData.email)
                 .setAddress(ContactData.address)
                 .setDescription(ContactData.description));
         app.getContact().clickOnSaveButton();
-
         Assert.assertTrue(app.getContact().isAlertPresent());
     }
 }

@@ -1,17 +1,10 @@
 package com.phonebook.data;
 
-/*
- UserData — тестовые данные существующего пользователя.
-
- Используется во всех тестах где нужна авторизация.
- Поля static final — константы, создавать объект не нужно: UserData.email
-
- ⚠ В реальных проектах credentials выносят в .env / CI secrets,
-   а не хранят в коде. Здесь учебный проект — поэтому хардкод допустим.
-*/
+// Данные существующего пользователя для тестов авторизации.
+// ⚠ В реальных проектах — выносить в .env / CI secrets.
 public class UserData {
 
-    private UserData() {} // запрещаем создание экземпляра
+    private UserData() {}
 
     public static final String email    = "serdarkerimov@gmail.com";
     public static final String password = "Qwertz123!";

@@ -1,17 +1,10 @@
 package com.phonebook.data;
 
-/*
- ContactData — тестовые данные контакта по умолчанию.
-
- Используется в позитивных тестах создания и удаления контакта.
- Поля static final — константы, создавать объект не нужно: ContactData.name
-
- Для наборов данных (несколько контактов) — используй ContactData.csv
- или @DataProvider в AddContactTests.
-*/
+// Тестовые данные контакта по умолчанию.
+// Константы — создавать объект не нужно: ContactData.name
 public class ContactData {
 
-    private ContactData() {} // запрещаем создание экземпляра
+    private ContactData() {}
 
     public static final String name        = "John";
     public static final String lastName    = "Wick";

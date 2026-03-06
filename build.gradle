@@ -9,6 +9,11 @@ repositories {
     mavenCentral()
 }
 
+// Компиляция Java в UTF-8
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
     implementation 'org.seleniumhq.selenium:selenium-java:4.41.0'
     implementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
@@ -31,7 +36,7 @@ test {
     }
 }
 
-// Универсальный запуск TestNG suite из XML
+// Универсальный запуск suite из XML
 def registerSuite(String taskName, String suitePath) {
     tasks.register(taskName, Test) {
         testClassesDirs = sourceSets.test.output.classesDirs
@@ -52,8 +57,11 @@ def registerSuite(String taskName, String suitePath) {
     }
 }
 
+// Основной проект
 registerSuite('regression', 'src/test/resources/regression.xml')
 registerSuite('negative', 'src/test/resources/negative.xml')
-registerSuite('smoke', 'src/test/resources/groups.xml')
+registerSuite('smoky', 'src/test/resources/groups.xml')
+
+// Homework suites
 registerSuite('hw19', 'src/test/resources/hw19.xml')
 registerSuite('HW22Jenkins', 'src/test/resources/HW22Jenkins.xml')

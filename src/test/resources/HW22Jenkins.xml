@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!-- Suite для Jenkins прогона lesson22 -->
 <suite name="HW22_Jenkins_Suite" verbose="1">
+
+    <!-- Параметры для тестов -->
     <parameter name="browser" value="firefox"/>
     <parameter name="email" value="serdarkerimov@gmail.com"/>
     <parameter name="password" value="Qwertz123!"/>
+
     <test name="HW22_All_Tests">
         <classes>
             <class name="homeworks.lesson22.tests.HW22HomePageTests"/>
@@ -14,4 +19,5 @@
             <class name="homeworks.lesson22.tests.HW22DeleteContactTests"/>
         </classes>
     </test>
+
 </suite>

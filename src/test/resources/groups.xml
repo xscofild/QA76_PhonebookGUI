@@ -1,21 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<!--
-  groups.xml — запуск тестов по группе "smoky".
-
-  Запуск: gradlew smoky
-
-  Smoke-тесты — минимальный набор для быстрой проверки что система живая.
-  Обычно запускается первым: если smoke упал → полный regression не нужен.
-
-  Как работает:
-    <groups><run><include name="smoky"/></run></groups>
-      → TestNG запускает только @Test(groups = "smoky")
-    <classes> — обязательно перечислить классы, иначе TestNG не знает где искать тесты.
-      Достаточно указать только те классы, где есть @Test(groups = "smoky").
--->
+<!-- Smoke suite: запускает только тесты с группой "smoky" -->
 <suite name="Groups" verbose="1">
-
     <test name="Smoky">
 
         <groups>
@@ -24,12 +10,11 @@
             </run>
         </groups>
 
-        <!-- Классы в которых есть @Test(groups = "smoky") -->
+        <!-- Только классы, где есть @Test(groups = "smoky") -->
         <classes>
             <class name="com.phonebook.tests.HomePageTests"/>
             <class name="com.phonebook.tests.AddContactTests"/>
         </classes>
 
     </test>
-
 </suite>

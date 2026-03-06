@@ -1,38 +1,26 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<!--
-  regression.xml — полный набор позитивных тестов.
-
-  Запуск: gradlew regression
-          gradlew regression -Pbrowser=firefox
-
-  <parameter> под классом LoginTests — передаёт email/password в @Parameters.
-  Это позволяет менять тестовые данные без перекомпиляции кода.
-
-  <exclude name=".*Negative.*"> — по regexp исключает методы с "Negative" в имени.
-  LoginTests содержит и позитивные и негативные тесты — здесь берём только позитивные.
--->
+<!-- Основной позитивный regression suite -->
 <suite name="Regression" verbose="1">
-
     <test name="Positive">
-        <classes>
 
+        <!-- Параметры для @Parameters в LoginTests -->
+        <parameter name="email" value="kristitomash33@gmail.com"/>
+        <parameter name="password" value="Aa12345!"/>
+
+        <classes>
             <class name="com.phonebook.tests.HomePageTests"/>
 
+            <!-- Из LoginTests исключаем негативные методы -->
             <class name="com.phonebook.tests.LoginTests">
-                <!-- Данные для @Parameters({"email","password"}) в loginPositiveTest -->
-                <parameter name="email"    value="serdarkerimov@gmail.com"/>
-                <parameter name="password" value="Qwertz123!"/>
                 <methods>
-                    <!-- Запускаем только позитивные методы — негативные идут в negative.xml -->
                     <exclude name=".*Negative.*"/>
                 </methods>
             </class>
 
             <class name="com.phonebook.tests.AddContactTests"/>
             <class name="com.phonebook.tests.DeleteContactTests"/>
-
         </classes>
-    </test>
 
+    </test>
 </suite>
