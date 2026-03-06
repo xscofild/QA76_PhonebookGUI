@@ -108,18 +108,32 @@ test {
 */
 def registerSuite(String taskName, String suitePath) {
     tasks.register(taskName, Test) {
-        testClassesDirs = sourceSets.test.output.classesDirs  // скомпилированные .class файлы
-        classpath        = sourceSets.test.runtimeClasspath   // все зависимости (Selenium, TestNG...)
+        // Где лежат скомпилированные тестовые классы
+        testClassesDirs = sourceSets.test.output.classesDirs
 
+        // Runtime classpath со всеми зависимостями
+        classpath = sourceSets.test.runtimeClasspath
+
+        // Говорим запускать именно TestNG suite XML
         useTestNG() {
-            suites suitePath  // путь к конкретному XML suite файлу
+            suites suitePath
         }
+
+        // Не искать тесты автоматически по классам.
+        // Брать только то, что указано в XML.
+        scanForTestClasses = false
+
+        // Не падать на этапе discovery, если Gradle криво пытается искать тесты.
+        // Для XML suite это полезная страховка.
+        failOnNoDiscoveredTests = false
 
         testLogging {
             events 'passed', 'skipped', 'failed'
             exceptionFormat 'full'
         }
 
+        // Передаём browser из командной строки:
+        // gradlew clean regression -Pbrowser=firefox
         if (project.hasProperty('browser')) {
             systemProperty 'browser', browser
         }
