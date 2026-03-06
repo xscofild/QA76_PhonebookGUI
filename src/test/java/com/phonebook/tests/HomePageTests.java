@@ -1,6 +1,6 @@
 package com.phonebook.tests;
 
-import com.phonebook.tests.core.TestBase;
+import com.phonebook.core.TestBase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

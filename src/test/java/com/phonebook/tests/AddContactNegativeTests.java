@@ -4,7 +4,7 @@ import com.phonebook.data.ContactData;
 import com.phonebook.data.UserData;
 import com.phonebook.models.Contact;
 import com.phonebook.models.User;
-import com.phonebook.tests.core.TestBase;
+import com.phonebook.core.TestBase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
