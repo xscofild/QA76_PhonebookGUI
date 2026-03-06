@@ -1,126 +1,54 @@
-/*
- ╔══════════════════════════════════════════════════════════╗
- ║                    QA76m_PhonebookGUI                    ║
- ║              Gradle build file — build.gradle            ║
- ╠══════════════════════════════════════════════════════════╣
- ║  Основные команды:                                       ║
- ║    gradlew regression                   — позитивные тесты      ║
- ║    gradlew negative                     — негативные тесты      ║
- ║    gradlew smoky                        — smoke группа          ║
- ║    gradlew hw19                         — домашнее задание 19   ║
- ║    gradlew regression -Pbrowser=firefox — запуск в firefox      ║
- ╚══════════════════════════════════════════════════════════╝
-*/
-
-// plugins — подключаем плагины Gradle.
-// 'java' — даёт поддержку Java: компиляцию, запуск тестов, сборку jar.
-// Без него Gradle не знает что делать с .java файлами.
 plugins {
     id 'java'
 }
 
-// group + version — нужны если публикуешь jar в репозиторий (Maven/Nexus).
-// Для учебного проекта не важны, но Gradle требует их наличия.
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
-// mavenCentral — центральный публичный репозиторий (hub для библиотек).
-// Gradle идёт сюда когда скачивает зависимости из dependencies{} блока ниже.
 repositories {
     mavenCentral()
 }
 
-// Фиксируем версию Java 17 для всего проекта.
-// Gradle сам скачает нужный JDK если он не установлен локально (toolchain).
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-// Зависимости — внешние библиотеки которые использует проект.
-// implementation     — доступно везде, попадает в production jar.
-// testImplementation — доступно ТОЛЬКО в тестах, в production jar НЕ попадает.
 dependencies {
-
-    // Selenium — основная библиотека для управления браузером:
-    // клики, ввод текста, навигация, поиск элементов.
     implementation 'org.seleniumhq.selenium:selenium-java:4.40.0'
-
-    // WebDriverManager — автоматически скачивает нужную версию chromedriver/geckodriver.
-    // Без него — пришлось бы вручную скачивать драйвер и следить за его версией.
     implementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
 
-    // TestNG — фреймворк для написания и запуска тестов.
-    // Даёт: @Test, @BeforeMethod, @DataProvider, suite XML, группы и т.д.
     testImplementation 'org.testng:testng:7.12.0'
-
-    // Logback — библиотека логирования.
-    // Пишет логи в консоль и в файл одновременно.
-    // Настраивается через src/test/resources/logback-test.xml.
     testImplementation 'ch.qos.logback:logback-classic:1.5.19'
 }
 
-// Явно указываем UTF-8 — чтобы не было крокозябр с кириллицей в комментариях.
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-/*
- Стандартный таск "test" — запуск командой: gradlew test
- Запускает ВСЕ тестовые классы подряд, без XML suite файла.
- Используется редко — обычно запускаем через registerSuite() ниже,
- чтобы контролировать какие именно тесты запускать.
-*/
+// gradlew test — запуск всех тестов без XML suite
 test {
-    // useTestNG() — говорим Gradle использовать TestNG вместо JUnit (JUnit по умолчанию).
     useTestNG()
 
-    // Отключаем бинарные отчёты — они блокируют папку build/ на Windows
-    // и мешают удалить её командой rmdir.
-    reports.junitXml.required = false
-    reports.html.required = false
-
     testLogging {
-        events 'passed', 'skipped', 'failed'  // что печатать в консоль
-        exceptionFormat 'full'                 // полный стектрейс при ошибке
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
     }
 
-    // Пробрасываем -Pbrowser=firefox из командной строки в System.getProperty("browser").
-    // TestBase читает это значение: System.getProperty("browser", "chrome").
     if (project.hasProperty('browser')) {
         systemProperty 'browser', browser
     }
 }
 
-/*
- registerSuite — универсальная функция для регистрации Gradle task-а по XML suite.
-
- Как работает:
-   registerSuite('regression', 'src/test/resources/regression.xml')
-   → создаёт task с именем 'regression'
-   → gradlew regression → запускает тесты из regression.xml
-
- Добавить новый suite = одна строка внизу файла. Больше ничего менять не нужно.
-
- def    — объявление функции в Groovy (язык на котором пишется build.gradle)
- String — тип параметра (можно было не писать, Groovy сам поймёт)
-*/
+// gradlew <taskName> -Pbrowser=firefox
 def registerSuite(String taskName, String suitePath) {
     tasks.register(taskName, Test) {
-        // Где лежат скомпилированные тестовые классы
-        testClassesDirs = sourceSets.test.output.classesDirs
 
-        // Runtime classpath со всеми зависимостями
-        classpath = sourceSets.test.runtimeClasspath
-
-        // Говорим запускать именно TestNG suite XML
-        useTestNG() {
+        useTestNG {
             suites suitePath
         }
 
-        // Не искать тесты автоматически по классам.
-        // Брать только то, что указано в XML.
         scanForTestClasses = false
 
         testLogging {
@@ -128,30 +56,15 @@ def registerSuite(String taskName, String suitePath) {
             exceptionFormat 'full'
         }
 
-        // Передаём browser из командной строки:
-        // gradlew clean regression -Pbrowser=firefox
         if (project.hasProperty('browser')) {
             systemProperty 'browser', browser
         }
     }
 }
 
-// ─── Phonebook — основные suite-ы проекта ──────────────────────────────────
-registerSuite('regression', 'src/test/resources/regression.xml')  // gradlew regression
-registerSuite('negative',   'src/test/resources/negative.xml')    // gradlew negative
-registerSuite('smoky',      'src/test/resources/groups.xml')      // gradlew smoky
-
-// ─── Homework — отдельный проект (demowebshop) ────────────────────
-registerSuite('hw19', 'src/test/resources/hw19.xml')              // gradlew hw19
-registerSuite('HW22Jenkins', 'src/test/resources/HW22Jenkins.xml')              // gradlew HW22Jenkins
-
-// ═════════════════════════════════════════════════════════════════════════════
-// ЕСЛИ build папка заблокирована (ошибка: Unable to delete directory):
-//
-//   Причина: IntelliJ IDEA или Gradle Daemon держат файлы открытыми.
-//
-//   Решение (выполнить по порядку в терминале):
-//     1. gradlew --stop        — останавливает Gradle Daemon
-//     2. rmdir /s /q build     — удаляет папку build вручную (Windows)
-//     3. gradlew negative      — пересобирает и запускает тесты заново
-// ═════════════════════════════════════════════════════════════════════════════
+// TestNG suite tasks
+registerSuite('regression', 'src/test/resources/regression.xml')
+registerSuite('negative', 'src/test/resources/negative.xml')
+registerSuite('smoke', 'src/test/resources/groups.xml')
+registerSuite('hw19', 'src/test/resources/hw19.xml')
+registerSuite('HW22Jenkins', 'src/test/resources/HW22Jenkins.xml')
