@@ -9,25 +9,15 @@ repositories {
     mavenCentral()
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 dependencies {
-    implementation 'org.seleniumhq.selenium:selenium-java:4.40.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.41.0'
     implementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
 
     testImplementation 'org.testng:testng:7.12.0'
     testImplementation 'ch.qos.logback:logback-classic:1.5.19'
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
-
-// gradlew test — запуск всех тестов без XML suite
+// gradlew test — запуск всех тестов без XML
 test {
     useTestNG()
 
@@ -41,15 +31,15 @@ test {
     }
 }
 
-// gradlew <taskName> -Pbrowser=firefox
+// Универсальный запуск TestNG suite из XML
 def registerSuite(String taskName, String suitePath) {
     tasks.register(taskName, Test) {
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
 
-        useTestNG {
+        useTestNG() {
             suites suitePath
         }
-
-        scanForTestClasses = false
 
         testLogging {
             events 'passed', 'skipped', 'failed'
@@ -62,7 +52,6 @@ def registerSuite(String taskName, String suitePath) {
     }
 }
 
-// TestNG suite tasks
 registerSuite('regression', 'src/test/resources/regression.xml')
 registerSuite('negative', 'src/test/resources/negative.xml')
 registerSuite('smoke', 'src/test/resources/groups.xml')
