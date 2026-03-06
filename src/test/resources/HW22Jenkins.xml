@@ -4,27 +4,12 @@
 
     <parameter name="browser" value="firefox"/>
 
-    <test name="HW20AddItemToCartTests">
-        <classes>
-            <class name="homeworks.lesson20.tests.HW20AddItemToCartTests"/>
-        </classes>
-    </test>
-
-    <test name="HW20ExistingUserRegisterTests">
-        <classes>
-            <class name="homeworks.lesson20.tests.HW20ExistingUserRegisterTests"/>
-        </classes>
-    </test>
-
-    <test name="HW20HomePageTests">
+    <test name="HW20_All_Tests">
         <classes>
             <class name="homeworks.lesson20.tests.HW20HomePageTests"/>
-        </classes>
-    </test>
-
-    <test name="HW20NewUserRegisterTests">
-        <classes>
+            <class name="homeworks.lesson20.tests.HW20ExistingUserRegisterTests"/>
             <class name="homeworks.lesson20.tests.HW20NewUserRegisterTests"/>
+            <class name="homeworks.lesson20.tests.HW20AddItemToCartTests"/>
         </classes>
     </test>
 
