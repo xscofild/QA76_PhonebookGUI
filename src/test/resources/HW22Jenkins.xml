@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="HW22_Jenkins_Suite" verbose="1">
+
+    <parameter name="browser" value="firefox"/>
+
+    <test name="LoginTests">
+        <classes>
+            <class name="com.phonebook.tests.LoginTests"/>
+        </classes>
+    </test>
+
+    <test name="CreateAccountTests">
+        <classes>
+            <class name="com.phonebook.tests.CreateAccountTests"/>
+        </classes>
+    </test>
+
+    <test name="HomePageTests">
+        <classes>
+            <class name="com.phonebook.tests.HomePageTests"/>
+        </classes>
+    </test>
+
+    <test name="AddContactTests">
+        <classes>
+            <class name="com.phonebook.tests.AddContactTests"/>
+        </classes>
+    </test>
+
+    <test name="AddContactNegativeTests">
+        <classes>
+            <class name="com.phonebook.tests.AddContactNegativeTests"/>
+        </classes>
+    </test>
+
+    <test name="DeleteContactTests">
+        <classes>
+            <class name="com.phonebook.tests.DeleteContactTests"/>
+        </classes>
+    </test>
+
+</suite>

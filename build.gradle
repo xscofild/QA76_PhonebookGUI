@@ -131,8 +131,9 @@ registerSuite('regression', 'src/test/resources/regression.xml')  // gradlew reg
 registerSuite('negative',   'src/test/resources/negative.xml')    // gradlew negative
 registerSuite('smoky',      'src/test/resources/groups.xml')      // gradlew smoky
 
-// ─── Homework lesson19 — отдельный проект (demowebshop) ────────────────────
+// ─── Homework — отдельный проект (demowebshop) ────────────────────
 registerSuite('hw19', 'src/test/resources/hw19.xml')              // gradlew hw19
+registerSuite('HW22Jenkins', 'src/test/resources/HW22_Jenkins.xml')              // gradlew HW22Jenkins
 
 // ═════════════════════════════════════════════════════════════════════════════
 // ЕСЛИ build папка заблокирована (ошибка: Unable to delete directory):
