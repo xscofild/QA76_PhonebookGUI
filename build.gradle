@@ -123,10 +123,6 @@ def registerSuite(String taskName, String suitePath) {
         // Брать только то, что указано в XML.
         scanForTestClasses = false
 
-        // Не падать на этапе discovery, если Gradle криво пытается искать тесты.
-        // Для XML suite это полезная страховка.
-        failOnNoDiscoveredTests = false
-
         testLogging {
             events 'passed', 'skipped', 'failed'
             exceptionFormat 'full'
@@ -147,7 +143,7 @@ registerSuite('smoky',      'src/test/resources/groups.xml')      // gradlew smo
 
 // ─── Homework — отдельный проект (demowebshop) ────────────────────
 registerSuite('hw19', 'src/test/resources/hw19.xml')              // gradlew hw19
-registerSuite('HW22Jenkins', 'src/test/resources/HW22_Jenkins.xml')              // gradlew HW22Jenkins
+registerSuite('HW22Jenkins', 'src/test/resources/HW22Jenkins.xml')              // gradlew HW22Jenkins
 
 // ═════════════════════════════════════════════════════════════════════════════
 // ЕСЛИ build папка заблокирована (ошибка: Unable to delete directory):
