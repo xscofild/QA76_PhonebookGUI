@@ -6,11 +6,18 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /*
- HomePageTests — проверки главной страницы.
+ HomePageTests — проверка доступности главной страницы.
+
+ Входит в smoke-группу (groups = "smoky").
+ Запускается через: gradlew smoky (groups.xml)
+
+ Smoke-тест — самый быстрый индикатор: если главная не открывается,
+ нет смысла запускать остальные тесты.
 */
 public class HomePageTests extends TestBase {
 
-    // Гарантируем что мы на главной странице перед тестом.
+    // Если главная страница уже открыта — ничего не делаем.
+    // Если нет — кликаем на ссылку Home в навигации.
     @BeforeMethod
     public void ensureHomePageIsOpen() {
         if (!app.getHomePage().isHomeComponentPresent()) {
@@ -18,7 +25,7 @@ public class HomePageTests extends TestBase {
         }
     }
 
-    @Test
+    @Test(groups = "smoky")
     public void isHomeComponentPresentTest() {
         Assert.assertTrue(app.getHomePage().isHomeComponentPresent());
     }

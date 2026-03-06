@@ -9,24 +9,35 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 /*
- ContactHelper — действия с контактами.
+ ContactHelper — все действия с контактами: создание, проверка, удаление.
 
- Создание, проверка наличия, удаление.
- Локаторы инкапсулированы здесь — тесты не знают о By/xpath/css.
+ Принцип: тесты не знают ни одного локатора.
+ Если верстка изменится — правим только эти локаторы, тесты не трогаем.
 */
 public class ContactHelper extends BaseHelper {
 
-    // CSS-класс карточки контакта. Если верстка изменится — правим только здесь.
+    // CSS-класс карточки контакта в списке.
+    // Вынесен в поле — используется в нескольких методах, чтобы не дублировать.
     private final By contactCards = By.cssSelector(".contact-item_card__2SOIM");
 
     public ContactHelper(WebDriver driver) {
         super(driver);
     }
 
-    // Ищет совпадение по тексту среди всех h2 на странице.
-    // Используется для проверки что контакт появился после создания.
-    public boolean isContactCreatedByText(String text) {
-        List<WebElement> names = driver.findElements(By.cssSelector("h2"));
+    // Проверяет наличие контакта по имени (тег h2 в карточке).
+    public boolean isContactCreatedByName(String text) {
+        return verifyText(text, By.cssSelector("h2"));
+    }
+
+    // Проверяет наличие контакта по номеру телефона (тег h3 в карточке).
+    public boolean isContactCreatedByPhone(String text) {
+        return verifyText(text, By.cssSelector("h3"));
+    }
+
+    // Универсальный поиск текста среди всех элементов с данным локатором.
+    // Перебирает все элементы — не падает если элементов нет.
+    public boolean verifyText(String text, By locator) {
+        List<WebElement> names = driver.findElements(locator);
         for (WebElement element : names) {
             if (element.getText().equals(text)) {
                 return true;
@@ -35,6 +46,7 @@ public class ContactHelper extends BaseHelper {
         return false;
     }
 
+    // Возвращает количество карточек контактов на странице.
     // Возвращает 0 если карточек нет — не бросает исключение.
     public int sizeOfContacts() {
         if (isElementPresent(contactCards)) {
@@ -47,7 +59,9 @@ public class ContactHelper extends BaseHelper {
         click(By.cssSelector("[href='/add']"));
     }
 
-    // Порядок полей соответствует порядку input-ов на форме добавления.
+    // Порядок вызовов type() соответствует порядку input-полей на форме добавления:
+    // [0] name, [1] surname, [2] phone, [3] email, [4] address, [5] description.
+    // Если поле в Contact равно null — type() его пропустит (поддержка частичного заполнения).
     public void fillContactForm(Contact contact) {
         type(By.xpath("//input[1]"), contact.getName());
         type(By.xpath("//input[2]"), contact.getSurname());
@@ -61,8 +75,8 @@ public class ContactHelper extends BaseHelper {
         click(By.cssSelector(".add_form__2rsm2 button"));
     }
 
-    // Кликает первую карточку и удаляет контакт.
-    // Используется для очистки данных после теста.
+    // Кликает первую карточку в списке → открывает детали → нажимает Remove.
+    // Используется для удаления контакта в @AfterMethod / @BeforeMethod тестов.
     public void removeContact() {
         click(contactCards);
         click(By.xpath("//button[.='Remove']"));

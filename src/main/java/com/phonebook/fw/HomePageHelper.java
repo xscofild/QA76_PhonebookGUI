@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /*
- HomePageHelper — действия на главной странице.
+ HomePageHelper — действия на главной странице приложения.
 */
 public class HomePageHelper extends BaseHelper {
 
@@ -13,6 +13,8 @@ public class HomePageHelper extends BaseHelper {
         super(driver);
     }
 
+    // Проверяет что главная страница загружена — ищет заголовок h1 в нужном div.
+    // Используется в @BeforeMethod HomePageTests для проверки состояния перед тестом.
     public boolean isHomeComponentPresent() {
         return isElementPresent(By.xpath("//div[2]//h1"));
     }

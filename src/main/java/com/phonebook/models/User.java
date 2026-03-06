@@ -1,20 +1,21 @@
 package com.phonebook.models;
 
 /*
- User — Value Object для данных пользователя.
+ User — модель данных пользователя (Value Object).
 
  Передаётся в UserHelper.fillLoginRegisterForm().
- Использует fluent-style setters:
 
-   User user = new User()
-       .setEmail("test@mail.com")
-       .setPassword("Pass123!");
+ Fluent-style (цепочка вызовов) — удобно создавать объект в одну строку:
+   new User().setEmail("test@mail.com").setPassword("Pass123!");
+
+ Не содержит логики — только хранение данных.
 */
 public class User {
 
     private String email;
     private String password;
 
+    // Возвращает this — позволяет цепочку: new User().setEmail(...).setPassword(...)
     public User setEmail(String email) {
         this.email = email;
         return this;

@@ -10,14 +10,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /*
- AddContactNegativeTests — негативные сценарии добавления контакта.
+ AddContactNegativeTests — негативные тесты добавления контакта.
 
- Проверяет, что при невалидных данных контакт не создаётся
- и система показывает ошибку (alert).
+ Проверяет что система корректно отклоняет невалидные данные.
+ При невалидных данных: контакт не создаётся, появляется alert.
+
+ Запускается через: gradlew negative (negative.xml)
 */
 public class AddContactNegativeTests extends TestBase {
 
-    // Гарантируем чистое состояние: пользователь авторизован перед тестом.
     @BeforeMethod
     public void precondition() {
         if (!app.getUser().isLoginLinkPresent()) {
@@ -30,13 +31,16 @@ public class AddContactNegativeTests extends TestBase {
         app.getUser().clickOnLoginButton();
     }
 
+    // Проверяет валидацию формата номера телефона.
+    // "1-99-666-4444" — содержит дефисы, которые сервер не принимает.
+    // Ожидаем: система показывает alert, контакт не сохраняется.
     @Test
     public void addContactWithInvalidPhoneNumber() {
         app.getContact().clickOnAddLink();
         app.getContact().fillContactForm(new Contact()
                 .setName(ContactData.name)
                 .setSurname(ContactData.lastName)
-                .setPhoneNumber("1-99-666-4444") // невалидный формат номера
+                .setPhoneNumber("1-99-666-4444") // невалидный формат — дефисы не разрешены
                 .setEmail(ContactData.email)
                 .setAddress(ContactData.address)
                 .setDescription(ContactData.description));

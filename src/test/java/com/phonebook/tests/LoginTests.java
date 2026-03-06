@@ -5,17 +5,24 @@ import com.phonebook.models.User;
 import com.phonebook.data.UserData;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 /*
  LoginTests — тесты авторизации пользователя.
 
- Позитивный: успешный вход с валидными данными.
- Негативный: попытка входа без email.
+ Позитивный: email + password из regression.xml (через @Parameters).
+ Негативный: вход с пустым email → ожидаем alert.
+
+ @Parameters — значения приходят из XML suite файла:
+   <parameter name="email" value="..."/>
+   <parameter name="password" value="..."/>
+ Это позволяет менять данные без перекомпиляции кода.
 */
 public class LoginTests extends TestBase {
 
-    // Гарантируем чистое состояние: если залогинен — выходим.
+    // Перед каждым тестом: если уже залогинен — выходим.
+    // Гарантирует чистое состояние независимо от предыдущего теста.
     @BeforeMethod
     public void ensurePrecondition() {
         if (!app.getUser().isLoginLinkPresent()) {
@@ -23,14 +30,18 @@ public class LoginTests extends TestBase {
         }
     }
 
+    // email и password приходят из <parameter> в regression.xml.
+    // Такой подход позволяет запускать один тест с разными данными из XML.
+    @Parameters({"email", "password"})
     @Test
-    public void loginPositiveTest() {
+    public void loginPositiveTest(String email, String password) {
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
-                .setEmail(UserData.email)
-                .setPassword(UserData.password));
+                .setEmail(email)
+                .setPassword(password));
         app.getUser().clickOnLoginButton();
 
+        // После успешного входа кнопка Sign Out должна появиться в навигации.
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
@@ -38,10 +49,11 @@ public class LoginTests extends TestBase {
     public void loginNegativeWithoutEmailTest() {
         app.getUser().clickOnLoginLink();
         app.getUser().fillLoginRegisterForm(new User()
-                .setEmail("")   // пустой email — невалидный сценарий
+                .setEmail("")          // пустой email — невалидный сценарий
                 .setPassword(UserData.password));
         app.getUser().clickOnLoginButton();
 
+        // Сервер должен вернуть ошибку — проявляется как browser alert.
         Assert.assertTrue(app.getUser().isAlertPresent());
     }
 }

@@ -2,38 +2,42 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
 <!--
-    hw19.xml — TestNG suite для домашнего задания Lesson 19
-    Сайт: https://demowebshop.tricentis.com/
+  hw19.xml — TestNG suite для домашнего задания Lesson 19.
+  Сайт: https://demowebshop.tricentis.com/
 
-    Запуск:
-      gradlew hw19
-      gradlew hw19 -Pbrowser=firefox
+  Запуск: gradlew hw19
+          gradlew hw19 -Pbrowser=firefox
+
+  Зарегистрирован в build.gradle:
+    registerSuite('hw19', 'src/test/resources/hw19.xml')
+
+  parallel="false" — тесты запускаются строго по очереди, не параллельно.
+  Для параллельного запуска: parallel="classes" или parallel="methods".
 -->
-
 <suite name="HW19 - DemoWebShop" verbose="1" parallel="false">
 
-    <!-- Smoke: просто открытие главной страницы -->
+    <!-- Smoke: открытие главной страницы — базовая проверка что сайт доступен -->
     <test name="HW19 - Home Page">
         <classes>
             <class name="homeworks.lesson19.tests.HW19HomePageTests"/>
         </classes>
     </test>
 
-    <!-- Регистрация нового пользователя -->
+    <!-- Регистрация нового пользователя с уникальными данными -->
     <test name="HW19 - New User Registration">
         <classes>
             <class name="homeworks.lesson19.tests.HW19NewUserRegisterTests"/>
         </classes>
     </test>
 
-    <!-- Логин существующего пользователя -->
+    <!-- Логин существующего (уже зарегистрированного) пользователя -->
     <test name="HW19 - Existing User Login">
         <classes>
             <class name="homeworks.lesson19.tests.HW19ExistingUserRegisterTests"/>
         </classes>
     </test>
 
-    <!-- Добавление товара в корзину -->
+    <!-- Добавление товара в корзину — проверка основного флоу покупки -->
     <test name="HW19 - Add Item To Cart">
         <classes>
             <class name="homeworks.lesson19.tests.HW19AddItemToCartTests"/>

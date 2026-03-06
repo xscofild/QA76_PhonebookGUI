@@ -8,14 +8,19 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /*
- CreateAccountTests — тесты регистрации пользователя.
+ CreateAccountTests — тесты регистрации нового пользователя.
 
- Позитивный тест отключён (enabled=false) — аккаунт уже существует,
- повторная регистрация с теми же данными невозможна.
+ Позитивный тест: enabled=false — отключён, потому что аккаунт уже существует.
+   Чтобы запустить — нужно вручную подставить уникальный email.
+
+ Негативный тест: попытка зарегистрировать уже существующий email.
+   Ожидаем: система показывает alert с ошибкой.
+
+ Запускается через: gradlew negative (negative.xml)
 */
 public class CreateAccountTests extends TestBase {
 
-    // Гарантируем чистое состояние: если залогинен — выходим.
+    // Перед тестом: если залогинен — выходим, чтобы форма регистрации была доступна.
     @BeforeMethod
     public void ensurePrecondition() {
         if (!app.getUser().isLoginLinkPresent()) {
@@ -23,7 +28,9 @@ public class CreateAccountTests extends TestBase {
         }
     }
 
-    // Отключён: для запуска нужен уникальный email (не существующий в системе).
+    // enabled = false — тест пропускается при запуске suite.
+    // Причина: UserData.email уже зарегистрирован. Повторная регистрация вернёт ошибку 409.
+    // Для запуска: замени UserData.email на новый уникальный адрес.
     @Test(enabled = false)
     public void newUserRegisterPositiveTest() {
         app.getUser().clickOnLoginLink();
@@ -35,6 +42,8 @@ public class CreateAccountTests extends TestBase {
         Assert.assertTrue(app.getUser().isSignOutButtonPresent());
     }
 
+    // Негативный: регистрация с уже существующим email → alert от сервера.
+    // isAlertPresent() принимает alert и возвращает true.
     @Test
     public void existedUserRegisterNegativeTest() {
         app.getUser().clickOnLoginLink();
@@ -43,7 +52,6 @@ public class CreateAccountTests extends TestBase {
                 .setPassword(UserData.password));
         app.getUser().clickOnRegistrationButton();
 
-        // Система должна показать alert при попытке зарегистрировать существующий email.
         Assert.assertTrue(app.getUser().isAlertPresent());
     }
 }

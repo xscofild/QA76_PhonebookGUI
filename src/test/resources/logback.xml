@@ -1,0 +1,47 @@
+<configuration>
+
+    <!--
+      logback.xml — настройка логирования для тестов.
+      Файл должен лежать в: src/test/resources/logback-test.xml
+
+      Logback пишет логи в два места одновременно:
+        1. STDOUT — консоль IntelliJ / терминала (видим сразу при запуске)
+        2. FILE   — файл в src/test_logs/ (сохраняется для анализа после)
+
+      Уровни логирования (от тихого к шумному):
+        ERROR → WARN → INFO → DEBUG → TRACE
+      Здесь root level="info" — пишем INFO и выше (INFO, WARN, ERROR).
+    -->
+
+    <!-- timestamp — переменная с текущим временем для имени лог-файла.
+         datePattern="dd'T'HHmmss" → например: 05T131229
+         Каждый запуск suite создаёт новый файл — не перезаписывает старые. -->
+    <timestamp key="bySecond" datePattern="dd'T'HHmmss"/>
+
+    <!-- Appender STDOUT — вывод в консоль -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Формат: время [поток] УРОВЕНЬ логгер - сообщение -->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender FILE — запись в файл -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!-- Путь + имя файла: log-05T131229.log (дата из timestamp выше) -->
+        <file>src/test_logs/log-${bySecond}.log</file>
+        <append>true</append>           <!-- true = дописывать, false = перезаписывать -->
+        <immediateFlush>true</immediateFlush> <!-- писать сразу, не буферизировать -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- root — корневой логгер. Все logger.info/error попадают сюда.
+         level="info" — пишем INFO, WARN, ERROR. DEBUG и TRACE игнорируем. -->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

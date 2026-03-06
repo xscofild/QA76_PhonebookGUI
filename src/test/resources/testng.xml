@@ -1,9 +1,24 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
+<!--
+  testng.xml — минимальный suite для быстрого одиночного запуска.
+
+  Запуск прямо из IntelliJ IDEA: правой кнопкой на файле → Run.
+  Или через Gradle: gradlew test (запускает ВСЕ тесты без suite-файла).
+
+  Отличие от regression.xml / negative.xml:
+    Те запускаются через gradlew + registerSuite в build.gradle.
+    Этот — удобен для быстрой проверки одного класса вручную из IDE.
+
+  verbose="1" — уровень детализации вывода TestNG в консоли (0-10).
+-->
 <suite name="Quick" verbose="1">
+
     <test name="HomePageTest">
         <classes>
+            <!-- Только один класс — для быстрой smoke-проверки главной страницы -->
             <class name="com.phonebook.tests.HomePageTests"/>
         </classes>
     </test>
+
 </suite>

@@ -12,11 +12,17 @@ import org.testng.annotations.Test;
 /*
  DeleteContactTests — тест удаления контакта.
 
- Предусловие: пользователь авторизован, контакт создан.
- Проверка: после удаления количество контактов уменьшается на 1.
+ Паттерн: Arrange → Act → Assert
+   Arrange (@BeforeMethod): логин + создание контакта
+   Act     (@Test):         запоминаем размер → удаляем
+   Assert  (@Test):         размер уменьшился на 1
+
+ Не полагаемся на конкретное число контактов — сравниваем до/после.
+ Это делает тест независимым от количества данных в системе.
 */
 public class DeleteContactTests extends TestBase {
 
+    // Предусловие: пользователь авторизован + контакт создан (есть что удалять).
     @BeforeMethod
     public void precondition() {
         if (!app.getUser().isLoginLinkPresent()) {
@@ -29,7 +35,6 @@ public class DeleteContactTests extends TestBase {
                 .setPassword(UserData.password));
         app.getUser().clickOnLoginButton();
 
-        // Создаём контакт, чтобы было что удалять.
         app.getContact().clickOnAddLink();
         app.getContact().fillContactForm(new Contact()
                 .setName(ContactData.name)
@@ -47,7 +52,9 @@ public class DeleteContactTests extends TestBase {
 
         app.getContact().removeContact();
 
-        // Пауза нужна: UI асинхронно обновляет список после удаления.
+        // pause(400) — SPA асинхронно обновляет список после удаления.
+        // Без паузы sizeOfContacts() может посчитать старые карточки до ре-рендера.
+        // Здесь нет явного DOM-события для ожидания, поэтому исключение из правила.
         app.getContact().pause(400);
 
         int sizeAfter = app.getContact().sizeOfContacts();
