@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.phonebook.tests.AddContactTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-03-05T09:51:31.408Z" hostname="LEGIONPRO7I" time="1.576">
+  <properties/>
+  <testcase name="addContactPositiveTest" classname="com.phonebook.tests.AddContactTests" time="1.576"/>
+  <system-out><![CDATA[10:51:33.050 [Test worker] INFO  com.phonebook.core.TestBase -- Stop smoky test
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
